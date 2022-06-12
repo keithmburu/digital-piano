@@ -1,0 +1,296 @@
+html, body {
+  font-family: "Candara", sans-serif;
+  height: 100%;
+  margin: 0;
+  line-height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  background: url('http://cdn.backgroundhost.com/backgrounds/subtlepatterns/foggy_birds.png') repeat;
+  z-index: 5;
+}
+
+#settings {
+  background:rgba(0,0,0,.3);
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 300;
+  /* bottom: 100; */
+  margin-bottom: 10px;
+  visibility: hidden;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+#settings_fieldset {
+  width: 50px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+label {
+  font-size: 16px;
+  align-content: center;
+}
+
+legend {
+  font-weight: bold;
+}
+
+#fieldsets, #range {
+  display: flex;
+  flex-direction: row;
+}
+
+#fieldsets2 {
+  display: flex;
+  flex-direction: column;
+}
+
+#nav {
+  height: 10vh;
+  display: flex;
+  justify-content: top;
+  align-items: center;
+  flex-grow: 1;
+}
+
+#settings_btn {
+  user-select: none;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  position:absolute;
+  left: 10px;
+  top: 10px;
+  border-radius: 50px;
+  background: grey;
+  text-align: center;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0px 3px 0px #27122e;
+  filter: brightness(90%);
+}
+
+#settings_btn:hover {
+  cursor: pointer;
+  filter: brightness(100%);
+}
+
+#settings_btn:active {
+  box-shadow: 0px 1px 0px #27122e;
+}
+
+#credits {
+  /* background: rgba(0,0,0,0.3);
+  padding: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 100;
+  display: flex;
+  flex-direction: row-reverse; */
+  visibility: hidden;
+}
+
+#app:hover #credits {
+  visibility: visible;
+}
+
+#settings fieldset {
+  font-size: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: white;
+  -webkit-text-stroke-width: 0.2px;
+  -webkit-text-stroke-color: black;
+}
+
+input {
+  cursor:pointer;
+}
+
+#settings label {
+  display: flex;
+  vertical-align: middle;
+}
+
+#settings label span {
+  width: 130px;
+}
+
+#credits {
+  text-align: right;
+  margin: 0 0 auto auto;
+}
+
+.badge {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+h1 {
+  font-size: 1.3em;
+  margin: 0;
+}
+
+h1 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p { font-size: 0.8em; margin: 0 0 0.1em;}
+
+a { color: hsl(6, 63%, 46%); }
+
+#chordContainer {
+  display: flex;
+  justify-content: center;
+  height: 50vh;
+  width: 100%;
+  align-items: center;
+  flex-grow: 1;
+}
+
+#chord {  
+  font-size: 16vw;
+  text-align: center;
+}
+
+.chordname {
+  margin-left: 20px;
+}
+
+#notes {
+  height: 10vh;
+  font-size: 5vw;
+  margin: auto;
+  flex-grow: 0;
+  white-space: nowrap;
+}
+
+.flat, .sharp {
+  margin: 0 0.01em 0 0.005em; 
+  font-size: 0.8em;
+}
+
+.key {
+  font-weight: bolder;
+  white-space: nowrap;
+}
+
+.chordname {
+  font-style: italic;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.bassnote {
+  font-size: 0.6em;
+  opacity: 0.5;
+}
+
+#keyboard {
+  margin-top: auto;
+  padding: 32px;
+  /* background: url('http://cdn.backgroundhost.com/backgrounds/subtlepatterns/bo_play_pattern.png') repeat; */
+  background: url('./dark-grey-terrazzo.png') repeat;
+  z-index: 10;
+}
+
+/* .note.white:hover, .note.black:hover {
+  background: rgba(30, 100, 11, 0.7);
+} */
+
+#board {
+  z-index: -1;
+  cursor: pointer;
+}
+
+#board-border {
+  fill: none;
+  stroke: #000;
+}
+
+.piano-key {
+  stroke: #666;
+}
+
+.piano-key-name {
+  font-size: 15px;
+  fill: rgba(0,0,0,0.5);
+  font-weight: bold;
+}
+
+
+.note.white .piano-key {
+  fill: url(#whiteKey);
+}
+
+.note.black .piano-key {
+  fill: url(#blackKey);
+}
+
+.note.black {
+  color:hsl(6, 63%, 46%);
+}
+
+.note.white {
+  color:hsl(6, 63%, 80%);
+}
+
+.note.white.active .piano-key {
+  fill: var(--colorActive);
+  filter: url(#insetKey);
+}
+
+.note.black.active .piano-key {
+  fill: var(--colorActive);
+  filter: url(#insetKey);
+}
+
+.note.white .piano-tonic {
+  fill: black;
+}
+
+.note.black .piano-tonic {
+  fill: white;
+}
+
+.note.white.modal .piano-key {
+  fill: var(--colorModal);
+}
+
+.note.black.modal .piano-key {
+  fill: var(--colorModal);
+}
+
+.piano-tonic {
+  opacity: 0;
+}
+
+.note.tonic .piano-tonic {
+  opacity: 1;
+}
+
+/*
+  Settings
+*/
+#app.hideChord #chord { display: none; }
+#app.hideBassNote .bassnote { display: none; }
+#app.hideNotes #notes { display: none; }
+#app.hideKeyboard #keyboard { display: none; }
+#app.hideKeyName .piano-key-name { display: none; }
+#app.hideTonic .piano-tonic { display: none; }
+
