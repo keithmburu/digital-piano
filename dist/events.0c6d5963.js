@@ -4583,7 +4583,7 @@ var range = function range(min, max) {
 exports.range = range;
 
 var parseRGB = function parseRGB(colorStr) {
-  if (typeof colorStr !== 'string' || !colorStr.match(/^#[0-9a-f]{6}$/i)) return null;
+  if (typeof colorStr !== "string" || !colorStr.match(/^#[0-9a-f]{6}$/i)) return null;
   var color = colorStr.toLowerCase();
   var r = parseInt(color.substr(1, 2), 16);
   var g = parseInt(color.substr(3, 2), 16);
@@ -4599,7 +4599,7 @@ exports.parseRGB = parseRGB;
 
 var toRGBA = function toRGBA(colorStr, alpha) {
   var color = parseRGB(colorStr);
-  if (!color) return 'transparent';
+  if (!color) return "transparent";
   return "rgba(".concat(color.r, ",").concat(color.g, ",").concat(color.b, ",").concat(alpha, ")");
 };
 
@@ -6682,22 +6682,21 @@ var _qs = _interopRequireDefault(require("qs"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var DEFAULT_SETTINGS = {
-  lowestNote: 'C3',
-  highestNote: 'B4',
+  lowestNote: "C3",
+  highestNote: "B4",
   sustain: false,
   chordal: false,
   extensions: false,
   arpeggio: false,
-  distortion: false,
-  modulation: false,
-  latinNotationEnabled: false,
-  key: 'C',
+  effect: "None",
+  solfege: "None",
+  key: "C",
   modeOptions: "None",
   highlight: "None",
   play: "None",
   highlightPlay: "None",
-  colorActive: '#bf3a2b',
-  colorModal: '#0751fe',
+  colorActive: "#bf3a2b",
+  colorModal: "#0751fe",
   hideNotes: false,
   hideChord: false,
   hideBassNote: false,
@@ -6717,12 +6716,12 @@ function setSetting(name, value) {
 
 function qsValueDecoder(str, decoder, charset) {
   if (!Number.isNaN(Number(str))) return Number(str);
-  if (str === 'true') return true;
-  if (str === 'false') return false; // https://github.com/ljharb/qs/blob/master/lib/utils.js
+  if (str === "true") return true;
+  if (str === "false") return false; // https://github.com/ljharb/qs/blob/master/lib/utils.js
 
   var strWithoutPlus = str.replace(/\+/g, ' ');
 
-  if (charset === 'iso-8859-1') {
+  if (charset === "iso-8859-1") {
     // unescape never throws, no try...catch needed:
     return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
   } // utf-8
@@ -6753,34 +6752,53 @@ function saveQueryParams() {
     addQueryPrefix: true
   });
 
-  window.history.pushState(customSettings, 'settings update', queryParams);
+  window.history.pushState(customSettings, "settings update", queryParams);
 }
 
 function onSettingChange(setting, evt) {
   var target = evt.target;
-
-  if (target.type === 'checkbox') {
-    setSetting(setting, !!target.checked);
-  }
-
   var oldModeOption;
 
   if (setting == "modeOptions") {
     oldModeOption = getSetting(setting);
   }
 
-  if (target.type === 'text' || target.type === 'color' || target.type === 'select-one') {
+  if (target.type === "checkbox") {
+    setSetting(setting, !!target.checked);
+
+    if (setting === "chordal") {
+      document.getElementById("playOption").disabled = !getSetting("chordal");
+      document.getElementById("highlightPlayOption").disabled = !getSetting("chordal");
+
+      if (!getSetting("chordal") && (getSetting("modeOptions") === "play" || getSetting("modeOptions") === "highlightPlay")) {
+        document.getElementById(getSetting("modeOptions") + "Label").style = "visibility: hidden; height: 0;";
+        document.getElementById("modeOptions").value = "highlight";
+        setSetting("modeOptions", "highlight");
+        document.getElementById("highlightLabel").style = "visibility: visible; height: auto;";
+        document.getElementById("highlight").value = document.getElementById("highlight").value;
+        setSetting("highlight", document.getElementById("highlight").value);
+      }
+    }
+  }
+
+  if (target.type === "text" || target.type === "color" || target.type === "select-one") {
+    if (setting === "modeOptions") {
+      if (oldModeOption !== "None") {
+        document.getElementById(oldModeOption + "Label").style = "visibility: hidden; height: 0;";
+      }
+
+      if (getSetting("chordal")) {
+        setSetting(setting, target.value);
+      }
+    }
+
     setSetting(setting, target.value);
   }
 
-  if (setting == "modeOptions") {
-    if (document.getElementById(getSetting("modeOptions"))) {
+  if (setting === "modeOptions") {
+    if (getSetting("modeOptions") !== "None") {
       document.getElementById(getSetting("modeOptions") + "Label").style = "visibility: visible; height: auto;";
-    }
-
-    if (oldModeOption != 'None') {
-      document.getElementById(oldModeOption + "Label").style = "visibility: hidden; height: 0;";
-      setSetting(oldModeOption, "None");
+      setSetting(getSetting("modeOptions"), document.getElementById(getSetting("modeOptions")).value);
     }
   }
 
@@ -6794,15 +6812,15 @@ function initSettings() {
     var setting = _Object$keys[_i];
     var element = document.getElementById(setting);
 
-    if (element.type === 'checkbox') {
+    if (element.type === "checkbox") {
       element.checked = getSetting(setting);
     }
 
-    if (element.type === 'text' || element.type === 'color' || element.type === 'select-one') {
+    if (element.type === "text" || element.type === "color" || element.type === "select-one") {
       element.value = getSetting(setting);
     }
 
-    element.addEventListener('input', onSettingChange.bind(null, setting));
+    element.addEventListener("input", onSettingChange.bind(null, setting));
   }
 }
 },{"./ui":"src/ui.js","qs":"node_modules/qs/lib/index.js"}],"src/keyboard.js":[function(require,module,exports) {
@@ -6822,7 +6840,7 @@ var _settings = require("./settings");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var keyboardContainer = document.getElementById('keyboard');
+var keyboardContainer = document.getElementById("keyboard");
 var NOTE_RADIUS = 5;
 var NOTE_WHITE_WIDTH = 40;
 var NOTE_WHITE_HEIGHT = 150;
@@ -6873,17 +6891,17 @@ function getNoteMarkup(noteNumber, offsetX, colorActiveWhite, colorActiveBlack, 
 }
 
 function generateKeyboard(from, to) {
-  var colorActiveWhite = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '#bf3a2b';
-  var colorActiveBlack = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '#bf3a2b';
-  var colorModalWhite = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '#076afe';
-  var colorModalBlack = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : '#076afe';
+  var colorActiveWhite = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "#bf3a2b";
+  var colorActiveBlack = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "#bf3a2b";
+  var colorModalWhite = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "#076afe";
+  var colorModalBlack = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "#076afe";
 
   var fromProps = _note.default.props(_note.default.simplify(from));
 
   var toProps = _note.default.props(_note.default.simplify(to));
 
-  var lowestNote = fromProps.name && fromProps.midi ? fromProps.alt ? fromProps.midi - 1 : fromProps.midi : _note.default.midi('C3');
-  var highestNote = toProps.name && toProps.midi ? toProps.alt ? toProps.midi + 1 : toProps.midi : _note.default.midi('C5');
+  var lowestNote = fromProps.name && fromProps.midi ? fromProps.alt ? fromProps.midi - 1 : fromProps.midi : _note.default.midi("C3");
+  var highestNote = toProps.name && toProps.midi ? toProps.alt ? toProps.midi + 1 : toProps.midi : _note.default.midi("C5");
   var start = Math.min(lowestNote, highestNote);
   var end = Math.max(lowestNote, highestNote);
   var keyboardNotes = (0, _utils.range)(start, end).reduce(function (keyboard, noteNumber) {
@@ -6906,13 +6924,13 @@ function generateKeyboard(from, to) {
 }
 
 function render() {
-  var lowestNote = (0, _settings.getSetting)('lowestNote');
-  var highestNote = (0, _settings.getSetting)('highestNote');
-  var colorActive = (0, _settings.getSetting)('colorActive');
-  var colorModal = (0, _settings.getSetting)('colorModal');
-  var colorActiveWhite = (0, _utils.mixRGB)(colorActive, '#ffffff', 0.4);
+  var lowestNote = (0, _settings.getSetting)("lowestNote");
+  var highestNote = (0, _settings.getSetting)("highestNote");
+  var colorActive = (0, _settings.getSetting)("colorActive");
+  var colorModal = (0, _settings.getSetting)("colorModal");
+  var colorActiveWhite = (0, _utils.mixRGB)(colorActive, "#ffffff", 0.4);
   var colorActiveBlack = colorActive;
-  var colorModalWhite = (0, _utils.mixRGB)(colorModal, '#ffffff', 0.4);
+  var colorModalWhite = (0, _utils.mixRGB)(colorModal, "#ffffff", 0.4);
   var colorModalBlack = colorModal;
   keyboardContainer.innerHTML = generateKeyboard(lowestNote, highestNote, colorActiveWhite, colorActiveBlack, colorModalWhite, colorModalBlack);
 }
@@ -59166,6 +59184,20 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+var basicSynth = new Tone.Synth().toDestination();
+var modSynth = new Tone.Synth().toDestination();
+var autoFilter = new Tone.AutoFilter(4).start();
+modSynth.chain(autoFilter, Tone.Destination);
+var distSynth = new Tone.Synth().toDestination();
+var distortion = new Tone.Distortion(0.4).toDestination();
+distSynth.connect(distortion);
+var basicPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+var modPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+var polyAutoFilter = new Tone.AutoFilter(8).start();
+modPolySynth.chain(polyAutoFilter, Tone.Destination);
+var distPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+var polyDistortion = new Tone.Distortion(0.25).toDestination();
+distPolySynth.connect(polyDistortion);
 var modalChords = {
   diatonicMajor: {
     0: ["M3", "P5", "M7", "P8M2"],
@@ -59232,6 +59264,9 @@ var modalChords = {
   },
   Undertones: {
     0: ["-P8", "-P8P5", "-P8P8", "-P8P8M3", "-P8P8P5"]
+  },
+  WholeTone: {
+    0: ["M2", "M3", "TT", "m6", "m7"]
   }
 };
 exports.modalChords = modalChords;
@@ -59251,7 +59286,7 @@ var intervals = {
 };
 
 function keypress() {
-  document.addEventListener('click', function (e) {
+  document.addEventListener("click", function (e) {
     var currElm = e.target;
 
     if (currElm.closest("div") && currElm.closest('g')) {
@@ -59268,7 +59303,7 @@ function keypress() {
 
 var playNote = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(id) {
-    var duration, midi, note, synth, autoFilter, distortion, now;
+    var duration, midi, note, effect, synth, now;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -59280,25 +59315,15 @@ var playNote = /*#__PURE__*/function () {
             return Tone.start();
 
           case 5:
-            synth = new Tone.Synth().toDestination();
-
-            if ((0, _settings.getSetting)("modulation")) {
-              autoFilter = new Tone.AutoFilter(4).start();
-              synth.chain(autoFilter, Tone.Destination);
-            }
-
-            if ((0, _settings.getSetting)("distortion")) {
-              distortion = new Tone.Distortion(0.4).toDestination();
-              synth.connect(distortion);
-            }
-
+            effect = (0, _settings.getSetting)("effect");
+            synth = effect == "modulation" ? modSynth : effect == "distortion" ? distSynth : basicSynth;
             now = Tone.now();
             (0, _events.noteOn)(midi);
             synth.triggerAttack(note, now);
             (0, _events.noteOff)(midi, duration);
             synth.triggerRelease(now + duration);
 
-          case 13:
+          case 12:
           case "end":
             return _context.stop();
         }
@@ -59313,7 +59338,7 @@ var playNote = /*#__PURE__*/function () {
 
 var playChord = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(id) {
-    var duration, midi, key, tonic, newKey, mode, modeOption, modeChoice, tonic_midi, offset, chordIntervals, numNotes, i, chordInterval, multiplier, interval, notes, _i, synth, autoFilter, distortion, now, wait, _i2, _i3, _i4;
+    var duration, midi, key, tonic, newKey, mode, modeOption, modeChoice, tonic_midi, offset, chordIntervals, numNotes, i, chordInterval, multiplier, interval, notes, _i, effect, synth, now, wait, _i2, _i3, _i4;
 
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
@@ -59322,21 +59347,23 @@ var playChord = /*#__PURE__*/function () {
             duration = (0, _settings.getSetting)("sustain") ? 5 : 0.5;
             midi = [];
             midi.push(parseInt(id.substring(5, id.length)));
-            key = (0, _settings.getSetting)('key');
+            key = (0, _settings.getSetting)("key");
             newKey = key;
-            modeOption = (0, _settings.getSetting)('modeOptions');
+            modeOption = (0, _settings.getSetting)("modeOptions");
 
             if (modeOption == "highlight" || modeOption == "None") {
               mode = "";
             } else {
               modeChoice = (0, _settings.getSetting)(modeOption);
 
-              if (modeChoice == 'None') {
+              if (modeChoice == "None") {
                 mode = "";
-              } else if (modeChoice == 'Minor') {
+              } else if (modeChoice == "Minor") {
                 mode = "minor";
-              } else if (modeChoice == 'Major') {
+              } else if (modeChoice == "Major") {
                 mode = "Major";
+              } else if (modeChoice == "WholeTone") {
+                mode = "WholeTone";
               } else if (modeChoice == "Quartal") {
                 mode = "Quartal";
               } else if (modeChoice == "Quintal") {
@@ -59351,9 +59378,9 @@ var playChord = /*#__PURE__*/function () {
 
                   if (modeChoice == "Diatonic") {
                     mode = "diatonicMinor";
-                  } else if (modeChoice == 'Pentatonic') {
+                  } else if (modeChoice == "Pentatonic") {
                     mode = "minorPentatonic";
-                  } else if (modeChoice == 'Blues') {
+                  } else if (modeChoice == "Blues") {
                     mode = "minorBlues";
                   }
                 } else {
@@ -59368,14 +59395,12 @@ var playChord = /*#__PURE__*/function () {
               }
             }
 
-            console.log(mode);
-
             if (mode != "") {
               tonic = newKey + "0";
               tonic_midi = _midi.default.toMidi(tonic);
 
-              if (-(tonic_midi - midi[0]) % 12 in modalChords[mode] || mode == "Quartal" || mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") {
-                if (mode == "Quartal" || mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") {
+              if (-(tonic_midi - midi[0]) % 12 in modalChords[mode] || mode == "WholeTone" || mode == "Quartal" || mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") {
+                if (mode == "WholeTone" || mode == "Quartal" || mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") {
                   offset = 0;
                 } else {
                   offset = -(tonic_midi - midi[0]) % 12;
@@ -59424,22 +59449,12 @@ var playChord = /*#__PURE__*/function () {
               notes.push(_midi.default.midiToNoteName(midi[_i]));
             }
 
-            _context2.next = 13;
+            _context2.next = 12;
             return Tone.start();
 
-          case 13:
-            synth = new Tone.PolySynth(Tone.Synth).toDestination();
-
-            if ((0, _settings.getSetting)("modulation")) {
-              autoFilter = new Tone.AutoFilter(8).start();
-              synth.chain(autoFilter, Tone.Destination);
-            }
-
-            if ((0, _settings.getSetting)("distortion")) {
-              distortion = new Tone.Distortion(0.25).toDestination();
-              synth.connect(distortion);
-            }
-
+          case 12:
+            effect = (0, _settings.getSetting)("effect");
+            synth = effect == "modulation" ? modPolySynth : effect == "distortion" ? distPolySynth : basicPolySynth;
             now = Tone.now();
 
             if ((0, _settings.getSetting)("arpeggio")) {
@@ -59466,7 +59481,7 @@ var playChord = /*#__PURE__*/function () {
               (0, _events.noteOff)(midi[_i4], duration + wait);
             }
 
-          case 20:
+          case 18:
           case "end":
             return _context2.stop();
         }
@@ -59519,10 +59534,10 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-var LAYOUT_SETTINGS = ['hideKeyboard', 'hideNotes', 'hideChord', 'hideBassNote', 'hideKeyName', 'hideTonic'];
-var appContainer = document.getElementById('app');
-var chordDisplay = document.getElementById('chord');
-var notesDisplay = document.getElementById('notes');
+var LAYOUT_SETTINGS = ["hideKeyboard", "hideNotes", "hideChord", "hideBassNote", "hideKeyName", "hideTonic"];
+var appContainer = document.getElementById("app");
+var chordDisplay = document.getElementById("chord");
+var notesDisplay = document.getElementById("notes");
 
 function highlightDiatonicNotes(key) {
   var newKey = key;
@@ -59565,16 +59580,16 @@ function highlightBluesNotes(key) {
 }
 
 function highlightNote(noteNumber) {
-  var className = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'active';
+  var className = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "active";
   var keyElement = document.getElementById("note-".concat(noteNumber));
   if (!keyElement) return;
 
-  if (className === 'active') {
+  if (className === "active") {
     var classList = Array.from(keyElement.classList);
 
-    if (classList.includes('modal')) {
-      keyElement.classList.remove('modal');
-      keyElement.classList.add('modal-active');
+    if (classList.includes("modal")) {
+      keyElement.classList.remove("modal");
+      keyElement.classList.add("modal-active");
     }
   }
 
@@ -59584,8 +59599,8 @@ function highlightNote(noteNumber) {
 function highLightNotes(tonic, mode) {
   var tonic_midi = _midi.default.toMidi(tonic);
 
-  var lowestNote = (0, _settings.getSetting)('lowestNote');
-  var highestNote = (0, _settings.getSetting)('highestNote');
+  var lowestNote = (0, _settings.getSetting)("lowestNote");
+  var highestNote = (0, _settings.getSetting)("highestNote");
 
   var firstMidi = _midi.default.toMidi(lowestNote);
 
@@ -59593,7 +59608,7 @@ function highLightNotes(tonic, mode) {
 
   for (var noteNumber = firstMidi; noteNumber <= lastMidi; noteNumber++) {
     if (-(tonic_midi - noteNumber) % 12 in _keypress.modalChords[mode]) {
-      highlightNote(noteNumber, 'modal');
+      highlightNote(noteNumber, "modal");
     }
   }
 }
@@ -59603,12 +59618,12 @@ function fadeNote(noteNumber) {
   if (!keyElement) return;
   var classList = Array.from(keyElement.classList);
 
-  if (classList.includes('modal-active')) {
-    keyElement.classList.remove('modal-active');
-    keyElement.classList.add('modal');
+  if (classList.includes("modal-active")) {
+    keyElement.classList.remove("modal-active");
+    keyElement.classList.add("modal");
   }
 
-  keyElement.classList.remove('active');
+  keyElement.classList.remove("active");
 }
 
 function highlightTonic(tonic) {
@@ -59622,7 +59637,7 @@ function highlightTonic(tonic) {
   try {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var note = _step.value;
-      highlightNote(note, 'tonic');
+      highlightNote(note, "tonic");
     }
   } catch (err) {
     _iterator.e(err);
@@ -59632,7 +59647,7 @@ function highlightTonic(tonic) {
 }
 
 function fadeTonics() {
-  var elements = document.querySelectorAll('.tonic');
+  var elements = document.querySelectorAll(".tonic");
 
   if (elements && elements.length) {
     var _iterator2 = _createForOfIteratorHelper(elements),
@@ -59641,7 +59656,7 @@ function fadeTonics() {
     try {
       for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var element = _step2.value;
-        element.classList.remove('tonic');
+        element.classList.remove("tonic");
       }
     } catch (err) {
       _iterator2.e(err);
@@ -59682,32 +59697,37 @@ function setLayoutSettings() {
 }
 
 function setAppLoaded(message) {
-  appContainer.classList.add('loaded');
+  appContainer.classList.add("loaded");
 }
 
 function setAppError(message) {
-  appContainer.classList.add('error');
-  setChordHtml('Error');
+  appContainer.classList.add("error");
+  setChordHtml("Error");
   setNotesHtml(message);
 }
 
 function render() {
   setLayoutSettings();
   (0, _keyboard.render)();
-  var modeOption = (0, _settings.getSetting)('modeOptions');
+  var modeOption = (0, _settings.getSetting)("modeOptions");
+  document.getElementById("playOption").disabled = !(0, _settings.getSetting)("chordal");
+  document.getElementById("highlightPlayOption").disabled = !(0, _settings.getSetting)("chordal");
   var highlight;
 
-  if (modeOption != 'play') {
+  if (modeOption != "play") {
     highlight = (0, _settings.getSetting)(modeOption);
   }
 
-  var key = (0, _settings.getSetting)('key');
+  var key = (0, _settings.getSetting)("key");
 
-  if (highlight == 'Diatonic') {
+  if (highlight == "Diatonic") {
+    console.log("diatonicn");
     highlightDiatonicNotes(key);
-  } else if (highlight == 'Pentatonic') {
+  } else if (highlight == "Pentatonic") {
+    console.log("pent");
     highlightPentatonicNotes(key);
-  } else if (highlight == 'Blues') {
+  } else if (highlight == "Blues") {
+    console.log("bl");
     highlightBluesNotes(key);
   }
 }
@@ -59724,28 +59744,44 @@ var _note = _interopRequireDefault(require("tonal/note"));
 
 var _settings = require("./settings");
 
+var _midi = _interopRequireDefault(require("@tonaljs/midi"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var FLAT_HTML = '<span class="flat">♭</span>';
-var SHARP_HTML = '<span class="sharp">♯</span>';
+var FLAT_HTML = "<span class='flat'>♭</span>";
+var SHARP_HTML = "<span class='sharp'>♯</span>";
 var LATIN_NOTES = {
-  C: 'Do',
-  'C#': 'Di',
-  'Db': 'Ra',
-  D: 'Re',
-  'D#': 'Ri',
-  'Eb': 'Me',
-  E: 'Mi',
-  F: 'Fa',
-  'F#': 'Fi',
-  'Gb': 'Se',
-  G: 'Sol',
-  'G#': 'Si',
-  'Ab': 'Le',
-  A: 'La',
-  'A#': 'Li',
-  'Bb': 'Te',
-  B: 'Ti'
+  C: "Do",
+  "C#": "Di",
+  "Db": "Ra",
+  D: "Re",
+  "D#": "Ri",
+  "Eb": "Me",
+  E: "Mi",
+  F: "Fa",
+  "F#": "Fi",
+  "Gb": "Se",
+  G: "Sol",
+  "G#": "Si",
+  "Ab": "Le",
+  A: "La",
+  "A#": "Li",
+  "Bb": "Te",
+  B: "Ti"
+};
+var SOLFEGE = {
+  0: ["Do"],
+  1: ["Di", "Ra"],
+  2: ["Re"],
+  3: ["Ri", "Me"],
+  4: ["Mi"],
+  5: ["Fa"],
+  6: ["Fi", "Se"],
+  7: ["Sol"],
+  8: ["Si", "Le"],
+  9: ["La"],
+  10: ["Li", "Te"],
+  11: ["Ti"]
 };
 
 function chordToHtml(chord) {
@@ -59776,10 +59812,36 @@ function chordBassToHtml(mod) {
 }
 
 function keyName(name, accidental) {
-  var latinNotationEnabled = (0, _settings.getSetting)('latinNotationEnabled');
+  if ((0, _settings.getSetting)("solfege") !== "None") {
+    var tonic;
 
-  if (latinNotationEnabled) {
-    return LATIN_NOTES[name + accidental];
+    if ((0, _settings.getSetting)('solfege') === "fixedDo") {
+      tonic = 'C';
+    } else {
+      tonic = (0, _settings.getSetting)("key");
+
+      if (tonic.substring(tonic.length - 1, tonic.length) === 'm') {
+        tonic = tonic.substring(0, tonic.length - 1);
+      }
+    }
+
+    var tonic_midi = _midi.default.toMidi(tonic + "0");
+
+    var note_midi = _midi.default.toMidi(name + accidental + "1");
+
+    var solfege;
+
+    if (SOLFEGE[-(tonic_midi - note_midi) % 12].length == 1) {
+      solfege = SOLFEGE[-(tonic_midi - note_midi) % 12];
+    } else {
+      if (accidental === '#') {
+        solfege = SOLFEGE[-(tonic_midi - note_midi) % 12][0];
+      } else {
+        solfege = SOLFEGE[-(tonic_midi - note_midi) % 12][1];
+      }
+    }
+
+    return solfege;
   } else {
     return name + altToHtml(accidental);
   }
@@ -59788,16 +59850,14 @@ function keyName(name, accidental) {
 function chordName(name) {
   return name.substr(0, 1) === 'M' ? name.substr(1) : name;
 }
-},{"tonal/note":"node_modules/tonal/note/index.js","./settings":"src/settings.js"}],"src/events.js":[function(require,module,exports) {
+},{"tonal/note":"node_modules/tonal/note/index.js","./settings":"src/settings.js","@tonaljs/midi":"node_modules/@tonaljs/midi/dist/index.es.js"}],"src/events.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.controller = void 0;
 exports.noteOff = noteOff;
 exports.noteOn = noteOn;
-exports.polyPressure = void 0;
 
 var _note = _interopRequireDefault(require("tonal/note"));
 
@@ -59898,12 +59958,6 @@ function _noteOff() {
   return _noteOff.apply(this, arguments);
 }
 
-function onEvent() {
-  var _console;
-
-  (_console = console).log.apply(_console, arguments);
-}
-
 function refresh() {
   var notes = currentNotes.map(_note.default.fromMidi).map(_note.default.pc);
   var chords = notes.length > 2 ? (0, _detect.chord)(notes) : [];
@@ -59924,11 +59978,6 @@ function refresh() {
     (0, _ui.fadeTonics)();
   }
 }
-
-var controller = onEvent.bind(void 0, 'controller');
-exports.controller = controller;
-var polyPressure = onEvent.bind(void 0, 'polyPressure');
-exports.polyPressure = polyPressure;
 },{"tonal/note":"node_modules/tonal/note/index.js","tonal/detect":"node_modules/tonal/detect/index.js","./ui":"src/ui.js","./chords":"src/chords.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

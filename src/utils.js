@@ -1,7 +1,7 @@
 export const range = (min, max) => Array(max - min + 1).fill().map((v,n) => n + min);
 
 export const parseRGB = (colorStr) => {
-  if (typeof colorStr !== 'string' || !colorStr.match(/^#[0-9a-f]{6}$/i)) return null; 
+  if (typeof colorStr !== "string" || !colorStr.match(/^#[0-9a-f]{6}$/i)) return null; 
   const color = colorStr.toLowerCase();
   
   const r = parseInt(color.substr(1, 2), 16);
@@ -13,7 +13,7 @@ export const parseRGB = (colorStr) => {
 
 export const toRGBA = (colorStr, alpha) => {
   const color = parseRGB(colorStr);
-  if (!color) return 'transparent';
+  if (!color) return "transparent";
 
   return `rgba(${color.r},${color.g},${color.b},${alpha})`;
 }

@@ -1,7 +1,22 @@
-import { noteOn, noteOff } from './events';
-import Midi from '@tonaljs/midi';
-import * as Tone from 'tone';
-import { getSetting } from './settings';
+import { noteOn, noteOff } from "./events";
+import Midi from "@tonaljs/midi";
+import * as Tone from "tone";
+import { getSetting } from "./settings";
+
+const basicSynth = new Tone.Synth().toDestination();
+const modSynth = new Tone.Synth().toDestination();
+const autoFilter = new Tone.AutoFilter(4).start();
+modSynth.chain(autoFilter, Tone.Destination);
+const distSynth = new Tone.Synth().toDestination();
+const distortion = new Tone.Distortion(0.4).toDestination();
+distSynth.connect(distortion);
+const basicPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+const modPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+const polyAutoFilter = new Tone.AutoFilter(8).start();
+modPolySynth.chain(polyAutoFilter, Tone.Destination);
+const distPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+const polyDistortion = new Tone.Distortion(0.25).toDestination();
+distPolySynth.connect(polyDistortion);
 
 export const modalChords = {
     diatonicMajor : {
@@ -69,6 +84,9 @@ export const modalChords = {
     },
     Undertones : {
         0 : ["-P8", "-P8P5", "-P8P8", "-P8P8M3", "-P8P8P5"],
+    },
+    WholeTone : {
+        0 : ["M2", "M3", "TT", "m6", "m7"]
     }
 }
 
@@ -88,7 +106,7 @@ const intervals = {
 }
 
 export function keypress() {
-    document.addEventListener('click', (e)=>{
+    document.addEventListener("click", (e)=>{
         let currElm = e.target;
         if (currElm.closest("div") && currElm.closest('g')) {
             if (currElm.closest("div").id === "keyboard" && currElm.closest('g').id.substring(0, 5) === "note-") {
@@ -107,15 +125,8 @@ const playNote = async (id) => {
     let midi = parseInt(id.substring(5, id.length));
     let note = Midi.midiToNoteName(midi); 
     await Tone.start();
-    const synth = new Tone.Synth().toDestination();
-    if (getSetting("modulation")) {
-        const autoFilter = new Tone.AutoFilter(4).start();
-        synth.chain(autoFilter, Tone.Destination);
-    }
-    if (getSetting("distortion")) {
-        const distortion = new Tone.Distortion(0.4).toDestination();
-        synth.connect(distortion);
-    }
+    const effect = getSetting("effect");
+    const synth = (effect == "modulation")? modSynth : ((effect == "distortion")? distSynth : basicSynth);
     const now = Tone.now();
     noteOn(midi);
     synth.triggerAttack(note, now);
@@ -127,22 +138,24 @@ const playChord = async (id) => {
     let duration = getSetting("sustain")? 5 : 0.5;
     let midi = [];
     midi.push(parseInt(id.substring(5, id.length)));
-    const key = getSetting('key');
+    const key = getSetting("key");
     let tonic;
     let newKey = key;
     let mode;
-    let modeOption = getSetting('modeOptions');
+    let modeOption = getSetting("modeOptions");
     let modeChoice;
     if (modeOption == "highlight" || modeOption == "None") {
         mode = "";
     } else {
         modeChoice = getSetting(modeOption);
-        if (modeChoice == 'None') {
+        if (modeChoice == "None") {
             mode = "";
-        } else if (modeChoice == 'Minor') {
+        } else if (modeChoice == "Minor") {
             mode = "minor";
-        } else if (modeChoice == 'Major') {
+        } else if (modeChoice == "Major") {
             mode = "Major";
+        } else if (modeChoice == "WholeTone") {
+            mode = "WholeTone";
         } else if (modeChoice == "Quartal") {
             mode = "Quartal";
         } else if (modeChoice == "Quintal") {
@@ -156,9 +169,9 @@ const playChord = async (id) => {
                 newKey = key.slice(0, key.length-1);
                 if (modeChoice == "Diatonic") {
                     mode = "diatonicMinor";
-                }  else if (modeChoice == 'Pentatonic') {
+                }  else if (modeChoice == "Pentatonic") {
                     mode = "minorPentatonic";
-                } else if (modeChoice == 'Blues') {
+                } else if (modeChoice == "Blues") {
                     mode = "minorBlues";
                 } 
             } else {
@@ -172,13 +185,12 @@ const playChord = async (id) => {
             }
         }
     }
-    console.log(mode);
     if (mode != "") {
         tonic = newKey + "0";
         let tonic_midi = Midi.toMidi(tonic);
-        if (-(tonic_midi - midi[0]) % 12 in modalChords[mode] || mode == "Quartal"|| mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") { 
+        if (-(tonic_midi - midi[0]) % 12 in modalChords[mode] || mode == "WholeTone" || mode == "Quartal"|| mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") { 
             let offset;
-            if (mode == "Quartal" || mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") { 
+            if (mode == "WholeTone" || mode == "Quartal" || mode == "Quintal" || mode == "Overtones" || mode == "Undertones" || mode == "Major" || mode == "minor") { 
                 offset = 0;
             } else {
                 offset = -(tonic_midi - midi[0]) % 12;
@@ -218,15 +230,8 @@ const playChord = async (id) => {
         notes.push(Midi.midiToNoteName(midi[i]));
     }
     await Tone.start();
-    let synth = new Tone.PolySynth(Tone.Synth).toDestination();
-    if (getSetting("modulation")) {
-        const autoFilter = new Tone.AutoFilter(8).start();
-        synth.chain(autoFilter, Tone.Destination);
-    }
-    if (getSetting("distortion")) {
-        const distortion = new Tone.Distortion(0.25).toDestination();
-        synth.connect(distortion);
-    }
+    const effect = getSetting("effect");
+    const synth = (effect == "modulation")? modPolySynth : ((effect == "distortion")? distPolySynth : basicPolySynth);
     const now = Tone.now();
     let wait;
     if (getSetting("arpeggio")) {

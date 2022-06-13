@@ -1,5 +1,5 @@
-import Note from 'tonal/note';
-import { chord as detectChord } from 'tonal/detect';
+import Note from "tonal/note";
+import { chord as detectChord } from "tonal/detect";
 import {
   highlightNote,
   fadeNote,
@@ -7,8 +7,8 @@ import {
   fadeTonics,
   setChordHtml,
   setNotesHtml,
-} from './ui';
-import { chordToHtml, keyToHtml } from './chords';
+} from "./ui";
+import { chordToHtml, keyToHtml } from "./chords";
 
 const currentNotes = [];
 
@@ -36,10 +36,6 @@ export async function noteOff(noteNumber, duration) {
   refresh();
 }
 
-function onEvent(...args) {
-  console.log(...args);
-}
-
 function refresh() {
   const notes = currentNotes.map(Note.fromMidi).map(Note.pc);
   const chords = notes.length > 2 ? detectChord(notes) : [];
@@ -63,6 +59,3 @@ function refresh() {
     fadeTonics();
   }
 }
-
-export const controller = onEvent.bind(this, 'controller');
-export const polyPressure = onEvent.bind(this, 'polyPressure');

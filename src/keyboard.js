@@ -1,9 +1,9 @@
-import Note from 'tonal/note';
-import { range, mixRGB } from './utils';
-import { getSetting } from './settings';
+import Note from "tonal/note";
+import { range, mixRGB } from "./utils";
+import { getSetting } from "./settings";
 
 
-const keyboardContainer = document.getElementById('keyboard');
+const keyboardContainer = document.getElementById("keyboard");
 
 const NOTE_RADIUS = 5;
 const NOTE_WHITE_WIDTH = 40;
@@ -91,7 +91,7 @@ function getNoteMarkup(noteNumber, offsetX, colorActiveWhite, colorActiveBlack, 
   }
 }
 
-export function generateKeyboard(from, to, colorActiveWhite = '#bf3a2b', colorActiveBlack = '#bf3a2b', colorModalWhite = '#076afe', colorModalBlack = '#076afe') {
+export function generateKeyboard(from, to, colorActiveWhite = "#bf3a2b", colorActiveBlack = "#bf3a2b", colorModalWhite = "#076afe", colorModalBlack = "#076afe") {
   const fromProps = Note.props(Note.simplify(from));
   const toProps = Note.props(Note.simplify(to));
 
@@ -100,7 +100,7 @@ export function generateKeyboard(from, to, colorActiveWhite = '#bf3a2b', colorAc
     ? fromProps.alt
       ? fromProps.midi - 1
       : fromProps.midi
-    : Note.midi('C3')
+    : Note.midi("C3")
   );
 
   const highestNote = (
@@ -108,7 +108,7 @@ export function generateKeyboard(from, to, colorActiveWhite = '#bf3a2b', colorAc
     ? toProps.alt
       ? toProps.midi + 1
       : toProps.midi
-    : Note.midi('C5')
+    : Note.midi("C5")
   );
   
   const start = Math.min(lowestNote, highestNote);
@@ -131,13 +131,13 @@ export function generateKeyboard(from, to, colorActiveWhite = '#bf3a2b', colorAc
 }
 
 export function render() {
-  const lowestNote = getSetting('lowestNote');
-  const highestNote = getSetting('highestNote');
-  const colorActive = getSetting('colorActive');
-  const colorModal = getSetting('colorModal');
-  const colorActiveWhite = mixRGB(colorActive, '#ffffff', 0.4);
+  const lowestNote = getSetting("lowestNote");
+  const highestNote = getSetting("highestNote");
+  const colorActive = getSetting("colorActive");
+  const colorModal = getSetting("colorModal");
+  const colorActiveWhite = mixRGB(colorActive, "#ffffff", 0.4);
   const colorActiveBlack = colorActive;
-  const colorModalWhite = mixRGB(colorModal, '#ffffff', 0.4);
+  const colorModalWhite = mixRGB(colorModal, "#ffffff", 0.4);
   const colorModalBlack = colorModal;
 
   keyboardContainer.innerHTML = generateKeyboard(lowestNote, highestNote, colorActiveWhite, colorActiveBlack, colorModalWhite, colorModalBlack);

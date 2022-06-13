@@ -12,7 +12,7 @@ html, body {
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  background: url('http://cdn.backgroundhost.com/backgrounds/subtlepatterns/foggy_birds.png') repeat;
+  background: url("http://cdn.backgroundhost.com/backgrounds/subtlepatterns/foggy_birds.png") repeat;
   z-index: 5;
 }
 
@@ -204,8 +204,8 @@ a { color: hsl(6, 63%, 46%); }
 #keyboard {
   margin-top: auto;
   padding: 32px;
-  /* background: url('http://cdn.backgroundhost.com/backgrounds/subtlepatterns/bo_play_pattern.png') repeat; */
-  background: url('./dark-grey-terrazzo.png') repeat;
+  /* background: url("http://cdn.backgroundhost.com/backgrounds/subtlepatterns/bo_play_pattern.png") repeat; */
+  background: url("./dark-grey-terrazzo.png") repeat;
   z-index: 10;
 }
 
