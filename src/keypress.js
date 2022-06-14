@@ -3,20 +3,13 @@ import Midi from "@tonaljs/midi";
 import * as Tone from "tone";
 import { getSetting } from "./settings";
 
-const basicSynth = new Tone.Synth().toDestination();
-const modSynth = new Tone.Synth().toDestination();
+const basicSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+const modSynth = new Tone.PolySynth(Tone.Synth).toDestination();
 const autoFilter = new Tone.AutoFilter(4).start();
 modSynth.chain(autoFilter, Tone.Destination);
-const distSynth = new Tone.Synth().toDestination();
+const distSynth = new Tone.PolySynth(Tone.Synth).toDestination();
 const distortion = new Tone.Distortion(0.4).toDestination();
 distSynth.connect(distortion);
-const basicPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
-const modPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
-const polyAutoFilter = new Tone.AutoFilter(8).start();
-modPolySynth.chain(polyAutoFilter, Tone.Destination);
-const distPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
-const polyDistortion = new Tone.Distortion(0.25).toDestination();
-distPolySynth.connect(polyDistortion);
 
 export const modalChords = {
     diatonicMajor : {
@@ -131,7 +124,7 @@ const playNote = async (id) => {
     noteOn(midi);
     synth.triggerAttack(note, now);
     noteOff(midi, duration);
-    synth.triggerRelease(now + duration);
+    synth.triggerRelease(note, now + duration);
 }
 
 const playChord = async (id) => {
@@ -231,7 +224,7 @@ const playChord = async (id) => {
     }
     await Tone.start();
     const effect = getSetting("effect");
-    const synth = (effect == "modulation")? modPolySynth : ((effect == "distortion")? distPolySynth : basicPolySynth);
+    const synth = (effect == "modulation")? modSynth : ((effect == "distortion")? distSynth : basicSynth);
     const now = Tone.now();
     let wait;
     if (getSetting("arpeggio")) {
