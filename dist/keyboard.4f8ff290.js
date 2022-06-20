@@ -57111,20 +57111,13 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var basicSynth = new Tone.Synth().toDestination();
-var modSynth = new Tone.Synth().toDestination();
+var basicSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+var modSynth = new Tone.PolySynth(Tone.Synth).toDestination();
 var autoFilter = new Tone.AutoFilter(4).start();
 modSynth.chain(autoFilter, Tone.Destination);
-var distSynth = new Tone.Synth().toDestination();
+var distSynth = new Tone.PolySynth(Tone.Synth).toDestination();
 var distortion = new Tone.Distortion(0.4).toDestination();
 distSynth.connect(distortion);
-var basicPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
-var modPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
-var polyAutoFilter = new Tone.AutoFilter(8).start();
-modPolySynth.chain(polyAutoFilter, Tone.Destination);
-var distPolySynth = new Tone.PolySynth(Tone.Synth).toDestination();
-var polyDistortion = new Tone.Distortion(0.25).toDestination();
-distPolySynth.connect(polyDistortion);
 var modalChords = {
   diatonicMajor: {
     0: ["M3", "P5", "M7", "P8M2"],
@@ -57137,7 +57130,7 @@ var modalChords = {
   },
   diatonicMinor: {
     0: ["m3", "P5", "M6", "P8M2"],
-    2: ["m3", "TT", "M6"],
+    2: ["m3", "TT", "m7"],
     3: ["M3", "P5", "M7", "P8M2"],
     5: ["m3", "P5", "M6", "P8M2"],
     7: ["M3", "P5", "m7", "P8m2"],
@@ -57248,7 +57241,7 @@ var playNote = /*#__PURE__*/function () {
             (0, _events.noteOn)(midi);
             synth.triggerAttack(note, now);
             (0, _events.noteOff)(midi, duration);
-            synth.triggerRelease(now + duration);
+            synth.triggerRelease(note, now + duration);
 
           case 12:
           case "end":
@@ -57381,7 +57374,7 @@ var playChord = /*#__PURE__*/function () {
 
           case 12:
             effect = (0, _settings.getSetting)("effect");
-            synth = effect == "modulation" ? modPolySynth : effect == "distortion" ? distPolySynth : basicPolySynth;
+            synth = effect == "modulation" ? modSynth : effect == "distortion" ? distSynth : basicSynth;
             now = Tone.now();
 
             if ((0, _settings.getSetting)("arpeggio")) {
@@ -60006,7 +59999,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37785" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38515" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

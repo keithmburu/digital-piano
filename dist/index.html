@@ -22,76 +22,78 @@
               <label><span>  Highest Note</span><input id="highestNote" type="text" size="2" maxlength="2"></label>
             </div>
             <div id="fieldsets">
-              <fieldset style="border-radius: 10px;">
-                <legend>Features</legend>
-                <label><span>Sustain</span><input id="sustain" type="checkbox"></label>
-                <label><span>Chordal</span><input id="chordal" type="checkbox"></label>
-                <label><span>Arpeggio</span><input id="arpeggio" type="checkbox"></label>
-                <label><span>Effect</span>
-                  <select id="effect">
-                    <option value="None">None</option>
-                    <option value="modulation">Modulation</option>
-                    <option value="distortion">Distortion</option>
-                  </select>
-                </label>
-                <label><span>Solfege</span>
-                  <select id="solfege">
-                    <option value="None">None</option>
-                    <option value="fixedDo">Fixed Do</option>
-                    <option value="moveableDo">Moveable Do</option>
-                  </select>
-                </label>
-              </fieldset>
-              <fieldset style="border-radius: 10px;">
-                <legend>Colors</legend>
-                <label><span>Active Note</span><input id="colorActive" type="color"></label>
-                <label><span>Modal Note</span><input id="colorModal" type="color"></label>
-              </fieldset>
-              <fieldset style="border-radius: 10px;">
-                <legend>Scales</legend>
-                <label id="keyLabel"><span>Key</span><input id="key" type="text" size="2" maxlength="3"></label>
-                <label><span>Mode Options</span>
-                  <select id="modeOptions">
-                    <option value="None">None</option>
-                    <option id="highlightOption" value="highlight">Highlight</option>
-                    <option id="playOption" value="play">Play Chords</option>
-                    <option id="highlightPlayOption" value="highlightPlay">Highlight and Play Chords</option>
-                  </select>
-                </label>
-                <label id="highlightLabel" style="visibility: hidden; height: 0;"><span>Highlight</span>
-                  <select id="highlight">
-                    <option value="None">None</option>
-                    <option value="Diatonic">Diatonic</option>
-                    <option value="Pentatonic">Pentatonic</option>
-                    <option value="Blues">Blues</option>
-                  </select>
-                </label>
-                <label id="playLabel" style="visibility: hidden; height: 0; "><span>Play</span>
-                  <select id="play">
-                    <option value="None">None</option>
-                    <option value="Major">Major</option>
-                    <option value="Minor">Minor</option>
-                    <option value="Diatonic">Diatonic</option>
-                    <option value="Pentatonic">Pentatonic</option>
-                    <option value="Blues">Blues</option>
-                    <option value="WholeTone">Whole Tone</option>
-                    <option value="Quartal">Quartal</option>
-                    <option value="Quintal">Quintal</option>
-                    <option value="Overtones">Overtones</option>
-                    <option value="Undertones">Undertones</option>
-                  </select>
-                </label>
-                <label id="highlightPlayLabel" style="visibility: hidden; height: 0;"><span>Highlight and Play Chords</span>
-                  <select id="highlightPlay">
-                    <option value="None">None</option>
-                    <option value="Diatonic">Diatonic</option>
-                    <option value="Pentatonic">Pentatonic</option>
-                    <option value="Blues">Blues</option>
-                  </select>
-                </label>
-                <label><span>Extensions</span><input id="extensions" type="checkbox"></label>
-              </fieldset>
-              <div id="fieldsets2">
+              <div class="fieldsetCol">
+                <fieldset style="border-radius: 10px;">
+                  <legend>Features</legend>
+                  <label><span>Sustain</span><input id="sustain" type="checkbox"></label>
+                  <label><span>Chordal</span><input id="chordal" type="checkbox"></label>
+                  <label><span>Arpeggio</span><input id="arpeggio" type="checkbox"></label>
+                  <label><span>Effect</span>
+                    <select id="effect">
+                      <option value="None">None</option>
+                      <option value="modulation">Modulation</option>
+                      <option value="distortion">Distortion</option>
+                    </select>
+                  </label>
+                  <label><span>Solfege</span>
+                    <select id="solfege">
+                      <option value="None">None</option>
+                      <option value="fixedDo">Fixed Do</option>
+                      <option value="movableDo">Movable Do</option>
+                    </select>
+                  </label>
+                </fieldset>
+                <fieldset style="border-radius: 10px;">
+                  <legend>Scales</legend>
+                  <label id="keyLabel"><span>Key</span><input id="key" type="text" size="2" maxlength="3"></label>
+                  <label><span>Mode Options</span>
+                    <select id="modeOptions">
+                      <option value="None">None</option>
+                      <option id="highlightOption" value="highlight">Highlight Notes</option>
+                      <option id="playOption" value="play">Play Chords</option>
+                      <option id="highlightPlayOption" value="highlightPlay"><span>Highlight Notes and Play Chords</span></option>
+                    </select>
+                  </label>
+                  <label id="highlightLabel" style="visibility: hidden; height: 0;"><span>Highlight</span>
+                    <select id="highlight">
+                      <option value="None">None</option>
+                      <option value="Diatonic">Diatonic</option>
+                      <option value="Pentatonic">Pentatonic</option>
+                      <option value="Blues">Blues</option>
+                    </select>
+                  </label>
+                  <label id="playLabel" style="visibility: hidden; height: 0; "><span>Play</span>
+                    <select id="play">
+                      <option value="None">None</option>
+                      <option value="Major">Major</option>
+                      <option value="Minor">Minor</option>
+                      <option value="Diatonic">Diatonic</option>
+                      <option value="Pentatonic">Pentatonic</option>
+                      <option value="Blues">Blues</option>
+                      <option value="WholeTone">Whole Tone</option>
+                      <option value="Quartal">Quartal</option>
+                      <option value="Quintal">Quintal</option>
+                      <option value="Overtones">Overtones</option>
+                      <option value="Undertones">Undertones</option>
+                    </select>
+                  </label>
+                  <label id="highlightPlayLabel" style="visibility: hidden; height: 0;"><span>Highlight and Play</span>
+                    <select id="highlightPlay">
+                      <option value="None">None</option>
+                      <option value="Diatonic">Diatonic</option>
+                      <option value="Pentatonic">Pentatonic</option>
+                      <option value="Blues">Blues</option>
+                    </select>
+                  </label>
+                  <label><span>Extensions</span><input id="extensions" type="checkbox"></label>
+                </fieldset>
+              </div>
+              <div class="fieldsetCol">
+                <fieldset style="border-radius: 10px;">
+                  <legend>Colors</legend>
+                  <label><span>Active Note</span><input id="colorActive" type="color"></label>
+                  <label><span>Modal Note</span><input id="colorModal" type="color"></label>
+                </fieldset>
                 <fieldset style="border-radius: 10px;">
                   <legend>Hide elements</legend>
                   <label><span>Chord Name</span><input id="hideChord" type="checkbox"></label>

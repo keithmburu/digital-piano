@@ -23,7 +23,7 @@ export const modalChords = {
     },
     diatonicMinor : {
         0 : ["m3", "P5", "M6", "P8M2"],
-        2 : ["m3", "TT", "M6"],
+        2 : ["m3", "TT", "m7"],
         3 : ["M3", "P5", "M7", "P8M2"],
         5 : ["m3", "P5", "M6", "P8M2"],
         7 : ["M3", "P5", "m7", "P8m2"],

@@ -7,6 +7,13 @@ html, body {
   z-index: 0;
 }
 
+#modeOptions {
+  height: 30px;
+  max-width: 120px;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+}
+
 #app {
   display: flex;
   flex-direction: column;
@@ -49,7 +56,7 @@ legend {
   flex-direction: row;
 }
 
-#fieldsets2 {
+#fieldsetCol {
   display: flex;
   flex-direction: column;
 }
