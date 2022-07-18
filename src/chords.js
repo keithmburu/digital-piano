@@ -82,7 +82,7 @@ function keyName(name, accidental) {
   if (getSetting("solfege") !== "None") {
     let tonic;
     if (getSetting('solfege') === "fixedDo") {
-      tonic = 'C';
+      tonic = "C";
     } else{
       tonic = getSetting("key");
       if (tonic.substring(tonic.length-1, tonic.length) === 'm') {
