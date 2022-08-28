@@ -1,7 +1,7 @@
 # ChorNote
 
 Web app that takes input on an onscreen piano keyboard, then plays back and identifies the
-corresponding notes and chords
+corresponding notes and chords. Built using Javascript, jQuery, HTML, and CSS.
 
 https://chornote.netlify.app
 
