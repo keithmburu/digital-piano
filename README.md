@@ -5,6 +5,8 @@ corresponding notes and chords. Built using Javascript, jQuery, HTML, and CSS.
 
 https://chornote.netlify.app
 
+![demo](demo.png)
+
 
 ### Features:
 
