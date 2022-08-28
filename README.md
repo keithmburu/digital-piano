@@ -15,7 +15,7 @@ https://chornote.netlify.app
     i. Major (Diatonic)\
     ii. Minor (Diatonic)\
     iii. Major & Minor Pentatonic\
-    iv. Major & Minor Blues\
+    iv. Major & Minor Blues
 3. Automatic chord construction\
     i. Major (Diatonic)\
     ii. Minor (Diatonic)\
@@ -25,15 +25,15 @@ https://chornote.netlify.app
     vi. Quartal\
     vii. Quintal\
     viii. Overtones\
-    ix. Undertones\
+    ix. Undertones
 3. Sound effects\
     i. Modulation\
-    ii. Distortion\
+    ii. Distortion
 4. Sustained notes
 5. Arpeggiated chords
 6. Solfege\
     i. Fixed Do\
-    ii. Moveable Do\
+    ii. Moveable Do
 6. Tonic highlighting
 
 
