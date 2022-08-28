@@ -5,8 +5,6 @@ corresponding notes and chords
 
 https://chornote.netlify.app
 
-Built using Javascript, jQuery, HTML, CSS, and Javascript frameworks tone.js and tonal.js
-
 
 ### Features:
 
