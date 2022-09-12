@@ -11,7 +11,6 @@ const appContainer = document.getElementById("app");
 const chordDisplay = document.getElementById("chord");
 const notesDisplay = document.getElementById("notes");
 
-
 export function highlightDiatonicNotes(key) {
   let newKey = key;
   let mode = "diatonicMajor";

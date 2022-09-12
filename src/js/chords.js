@@ -5,26 +5,6 @@ import Midi from "@tonaljs/midi";
 const FLAT_HTML = "<span class='flat'>♭</span>";
 const SHARP_HTML = "<span class='sharp'>♯</span>";
 
-const LATIN_NOTES = {
-  C: "Do",
-  "C#": "Di",
-  "Db": "Ra",
-  D: "Re",
-  "D#": "Ri",
-  "Eb": "Me",
-  E: "Mi",
-  F: "Fa" ,
-  "F#": "Fi",
-  "Gb": "Se",
-  G: "Sol",
-  "G#": "Si",
-  "Ab": "Le",
-  A: "La",
-  "A#": "Li",
-  "Bb": "Te",
-  B: "Ti",
-}
-
 const SOLFEGE = {
   0 : ["Do"],
   1 : ["Di", "Ra"],
